@@ -1,11 +1,21 @@
 /* Config */
-const baseUrl = 'https://localhost:7060/comments';
 const pageId = 'add-page-id-here';
 const commentsUrl = `${baseUrl}?page_url=${pageId}`;
 
-
-/* State */
+/* Running State */
 let comments = [];
+
+/* LocalStorage Access */
+
+function getDeletionKeys() {
+    return (localStorage.deletion_keys && JSON.parse(localStorage.deletion_keys)) || {};
+}
+
+function setDeletionKey(commentId, key) {
+    const keys = getDeletionKeys();
+    keys[commentId] = key;
+    localStorage.deletion_keys = JSON.stringify(keys);
+}
 
 /* GUI components */
 
@@ -15,7 +25,7 @@ const deleteButton = x =>
 
 const commentFmt = x =>
   `<div class='comment' id='comment${x.id}'>${x.content}<br/>${x.created_at}`+
-    `${x.deletion_key  ? deleteButton(x) :''}</div>`;
+    `${getDeletionKeys()[x.id] ? deleteButton(x) :''}</div>`;
 
 function commentsRender() {
   commentsthread.innerHTML =
@@ -23,7 +33,6 @@ function commentsRender() {
                     ${comments.map(commentFmt).join('')}
                 </div>`;
 }
-
 
 /* API calls */
 
@@ -39,11 +48,16 @@ function fetchComments() {
     })
 }
 
-// POST new comment
-function createComment(comment) {
+// only 64 bits so not very strong
+function generateRandomKey() {
   const xs = new BigUint64Array(1);
   crypto.getRandomValues(xs);
-  comment.deletion_key = xs[0].toString();
+  return xs[0].toString();
+}
+
+// POST new comment
+function createComment(comment) {
+  comment.deletion_key = generateRandomKey();
   fetch(baseUrl, {
     method: 'POST',
     body: JSON.stringify(comment),
@@ -52,6 +66,7 @@ function createComment(comment) {
     .then(id => {
       const newComment = {id, created_at: 'just now', ...comment}
       comments = [newComment, ...comments];
+      setDeletionKey(id, comment.deletion_key);
       commentsRender();
     })
 }
@@ -60,14 +75,17 @@ function createComment(comment) {
 
 function handleCommentFormSubmit() {
   if (commentcontent.value !== "") {
-    createComment({page_url: pageId, content: commentcontent.value});
+    createComment({
+      page_url: pageId,
+      content: `${commentcontent.value}\n - ${username.value}`,
+      bot: bot.value
+    });
     commentcontent.value = '';
   }
 }
 
 // DELETE comment
 function handleDelete(commentId, deletionKey) {
-  console.log('deleting:',{commentId,deletionKey});
   fetch(
     `${baseUrl}?comment=${commentId}&deletion_key=${deletionKey}`,
     {method: 'DELETE'}
@@ -78,7 +96,6 @@ function handleDelete(commentId, deletionKey) {
     }
   });
 }
-
 
 /* init */
 fetchComments();

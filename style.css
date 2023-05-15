@@ -1,0 +1,40 @@
+.comment-form {
+    margin-top: 1em;
+}
+
+.comment-form #commentcontent {
+    width: 100%;
+}
+
+.comment-form #submit {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 220, 1);
+    background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+    margin-top:2px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 450px) {
+    #submit {
+        width: 100%;
+    }
+}
+
+.comment {
+    white-space: pre-wrap;
+    border:solid;
+    margin-bottom:0.25em;
+    padding:0.5em;
+}
+
+#commentsthreadinner {
+    margin-top:0.5em;
+}
