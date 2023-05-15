@@ -1,6 +1,6 @@
 /* Config */
-const baseUrl = 'https://comments.dotemgo.com/comments';
-const pageId = '{{site-url}}{{uri}}';
+const baseUrl = 'https://localhost:7060/comments';
+const pageId = 'add-page-id-here';
 const commentsUrl = `${baseUrl}?page_url=${pageId}`;
 
 
