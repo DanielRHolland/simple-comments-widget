@@ -1,10 +1,6 @@
-/* Config */
-const pageId = 'add-page-id-here';
-const commentsUrl = `${baseUrl}?page_url=${pageId}`;
-
 /* Running State */
 let comments = [];
-
+ 
 /* LocalStorage Access */
 
 function getDeletionKeys() {
@@ -38,7 +34,7 @@ function commentsRender() {
 
 // GET comments
 function fetchComments() {
-  fetch(commentsUrl)
+  fetch(`${config.base_url}?page_url=${config.page_id}`)
     .then(r => r.ok && r.json())
     .then(xs => {
       comments = xs;
@@ -58,7 +54,7 @@ function generateRandomKey() {
 // POST new comment
 function createComment(comment) {
   comment.deletion_key = generateRandomKey();
-  fetch(baseUrl, {
+  fetch(config.base_url, {
     method: 'POST',
     body: JSON.stringify(comment),
     headers: {'content-type': 'application/json'}
@@ -76,7 +72,7 @@ function createComment(comment) {
 function handleCommentFormSubmit() {
   if (commentcontent.value !== "") {
     createComment({
-      page_url: pageId,
+      page_url: config.page_id,
       content: `${commentcontent.value}\n - ${username.value}`,
       bot: bot.value
     });
@@ -87,7 +83,7 @@ function handleCommentFormSubmit() {
 // DELETE comment
 function handleDelete(commentId, deletionKey) {
   fetch(
-    `${baseUrl}?comment=${commentId}&deletion_key=${deletionKey}`,
+    `${config.base_url}?comment=${commentId}&deletion_key=${deletionKey}`,
     {method: 'DELETE'}
   ).then(r => {
     if (r.ok) {
