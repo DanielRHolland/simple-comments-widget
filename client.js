@@ -34,7 +34,7 @@ function commentsRender() {
 
 // GET comments
 function fetchComments() {
-  fetch(`${config.base_url}?page_url=${config.page_id}`)
+  fetch(`${config.base_url}?page_id=${config.page_id}`)
     .then(r => r.ok && r.json())
     .then(xs => {
       comments = xs;
@@ -72,7 +72,7 @@ function createComment(comment) {
 function handleCommentFormSubmit() {
   if (commentcontent.value !== "") {
     createComment({
-      page_url: config.page_id,
+      page_id: config.page_id,
       content: `${commentcontent.value}\n - ${username.value}`,
       bot: bot.value
     });

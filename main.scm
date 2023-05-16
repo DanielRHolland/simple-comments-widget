@@ -14,7 +14,7 @@
 ; Creates table automatically on initial run
 (execute db "CREATE TABLE IF NOT EXISTS comments (
                 id TEXT PRIMARY KEY,
-                page_url TEXT,
+                page_id TEXT,
                 content TEXT,
                 deletion_key TEXT,
                 created_at DATETIME default current_timestamp
@@ -26,32 +26,32 @@
      (* (current-seconds) 100000)))
 
 ; inserts comment into db
-(define (create-comment page-url content deletion-key)
+(define (create-comment page-id content deletion-key)
   (let ([id (gen-id)]
         [content-or-empty (if (or (not content) (eof-object? content))
                             ""
                             content)])
     (execute db "INSERT INTO comments
-             (id, page_url, content, deletion_key)
+             (id, page_id, content, deletion_key)
              VALUES (?, ?, ?, ?)"
-             id page-url content-or-empty deletion-key)
+             id page-id content-or-empty deletion-key)
     id))
 
 ; turns db row into list of key-value pairs
-(define (comment-row->alist id page-url content created-at)
+(define (comment-row->alist id page-id content created-at)
   `((id . ,id)
-    (page_url . ,page-url)
+    (page_id . ,page-id)
     (created_at . ,created-at)
     (content . ,content)))
 
-; selects all comments with the given page-url
-(define (get-comments page-url)
+; selects all comments with the given page-id
+(define (get-comments page-id)
   (map-row comment-row->alist db
-           "SELECT c.id, c.page_url, c.content, c.created_at
+           "SELECT c.id, c.page_id, c.content, c.created_at
            FROM comments c
-           WHERE c.page_url = ?
+           WHERE c.page_id = ?
            ORDER BY c.created_at DESC"
-           page-url
+           page-id
            ))
 
 ; deletes any comment with the comment-id and deletion-key given, if any exist
@@ -65,9 +65,9 @@
 (define (get-req-var k)
   (alist-ref k (uri-query (request-uri (current-request)))))
 
-; get page_url query string parameter
-(define (get-page-url)
-  (get-req-var 'page_url))
+; get page_id query string parameter
+(define (get-page-id)
+  (get-req-var 'page_id))
 
 ; read current-request body as json. Arrays represented as lists, objects as alists
 (define (read-json-body)
@@ -94,7 +94,7 @@
 
     (POST (/ "comments") ,(lambda ()
                             (let* ([json-body (read-json-body)]
-                                   [page-url (json-value-ref json-body 'page_url)]
+                                   [page-id (json-value-ref json-body 'page_id)]
                                    [content (json-value-ref json-body 'content)]
                                    [deletion-key (json-value-ref json-body 'deletion_key)]
                                    [bot? (not (equal? "no" (json-value-ref json-body 'bot)))])
@@ -103,12 +103,12 @@
                                 (send-response
                                   status: 'ok
                                   body: (number->string
-                                          (create-comment page-url content deletion-key))
+                                          (create-comment page-id content deletion-key))
                                   headers: base-headers)))))
 
     (GET (/ "comments") ,(lambda ()
-                           (let* ([page-url (get-page-url)]
-                                  [comments (list->vector (get-comments page-url))])
+                           (let* ([page-id (get-page-id)]
+                                  [comments (list->vector (get-comments page-id))])
                              (send-response
                                headers:  (cons
                                            '(content-type application/json)
