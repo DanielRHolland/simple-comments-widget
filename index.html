@@ -2,13 +2,29 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="style.css">
+        <style>
+            body {
+                font-family: Lato, FreeSans, Roboto, Helvetica, Sans-Serif;
+            }
+
+            #comments-object {
+                border: solid thin;
+                box-sizing: border-box;
+            }
+        </style>
     </head>
-    <h1> Comments Demo Page </h1>
+    <body>
+        <h1> Comments Demo Page </h1>
 
-    <p>Page demonstrating usage of comments widget.</p>
+        <p>Demo page for github pages.</p>
 
-    <p>All comments on the demo server will be wiped automatically roughly every hour. Don't post anything stupid.</p>
+        <p>All comments on the demo server will be wiped automatically roughly every hour. Don't post anything stupid.</p>
 
-    <object width="100%" height="1000vh" type="text/html" data="client.html"></object>
+        <object id="comments-object"
+                width="100%"
+                height="1000vh"
+                type="text/html"
+                data="client.html"
+                ></object>
+    </body>
 </html>

@@ -1,15 +1,23 @@
+#comments-widget h5 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 #comments-widget {
     font-family: Lato, FreeSans, Roboto, Helvetica, Sans-Serif;
+    display: flex;
+    flex-direction: column;
 }
 
 .comment-form {
-    margin-top: 1em;
+    max-width: 100%;
 }
 
 .comment-form #commentcontent {
     width: 100%;
-    font-family: Lato, FreeSans, Roboto, Helvetica, Sans-Serif;
+    box-sizing: border-box;
 }
+
 
 .comment-form #submit {
     border: 0;
@@ -27,17 +35,17 @@
     cursor: pointer;
 }
 
-@media only screen and (max-width: 450px) {
-    #submit {
-        width: 100%;
-    }
 
-    #bot {
-        width: 100%;
+@media only screen and (min-width: 481px) {
+    .comment-form #submit {
+        float: right;
     }
+}
 
-    #username {
+@media only screen and (max-width: 481px) {
+    .comment-form input {
         width: 100%;
+        box-sizing: border-box;
     }
 }
 
