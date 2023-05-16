@@ -6,7 +6,7 @@ var config = {
 
 
 // github pages config
-if (window.location.href === 'https://danielrholland.github.io/simple-comments-widget/client.html'){
+if (window.location.hostname === 'danielrholland.github.io'){
   config = {
     base_url : 'https://comments.dotemgo.com/comments',
     page_id : 'https://danielrholland.github.io/simple-comments-widget/client.html'
