@@ -1,9 +1,14 @@
+#comments-widget {
+    font-family: Lato, FreeSans, Roboto, Helvetica, Sans-Serif;
+}
+
 .comment-form {
     margin-top: 1em;
 }
 
 .comment-form #commentcontent {
     width: 100%;
+    font-family: Lato, FreeSans, Roboto, Helvetica, Sans-Serif;
 }
 
 .comment-form #submit {
@@ -24,6 +29,14 @@
 
 @media only screen and (max-width: 450px) {
     #submit {
+        width: 100%;
+    }
+
+    #bot {
+        width: 100%;
+    }
+
+    #username {
         width: 100%;
     }
 }
