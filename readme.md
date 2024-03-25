@@ -2,9 +2,9 @@
 
 This is a comments component for adding to web pages, plus a backend service that stores comments in a database.
 
-Users can delete their own comments, but the server does not save any user information. This is acheived by generating a key for every new comment, which is cached in the browser of the creator, and also stored in the server's database. Deletion REST requests must include this number, as well as the comment's id.
+Users can delete their own comments, but the server does not save any user information. This is acheived by generating a key for every new comment, which is cached in the browser of the creator, and also stored in the server's database. Deletion HTTP requests must include this number, as well as the comment's id.
 
-### Server REST API
+### Server HTTP API
 
 - `GET /comments?page_id=add-page-id-here` : returns a json array of comments for the page 'add-page-id-here'.
 - `POST /comments` : takes a json body of the form `{"bot":"no", "content": "foo bar", "deletion_key": "3858516384593962266", "page_id":"add-page-id-here"}`. Creates a comment and returns plain text containing the id of the new comment.
