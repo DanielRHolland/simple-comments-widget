@@ -15,19 +15,34 @@ function setDeletionKey(commentId, key) {
 
 /* GUI components */
 
-const deleteButton = x =>
-  `<button style='float:right;' onclick='handleDelete("${x.id}", "${x.deletion_key}")'>`+
-    `delete</button>`;
+function deleteButton(x) {
+  const el = document.createElement('button');
+  el.style = 'float:right;';
+  el.onClick = () => handleDelete(x.id, x.deletion_key);
+  el.innerText = 'delete';
+  return el;
+}
 
-const commentFmt = x =>
-  `<div class='comment' id='comment${x.id}'>${x.content}<br/>${x.created_at}`+
-    `${getDeletionKeys()[x.id] ? deleteButton(x) :''}</div>`;
+function commentFmt (x) {
+  const el = document.createElement('div');
+  el.classList.add('comment');
+  el.id = `comment${x.id}`;
+  el.replaceChildren(
+    x.content,
+    document.createElement('br'),
+    x.created_at
+  );
+  if (getDeletionKeys()[x.id]) {
+    el.appendChild(deleteButton(x));
+  }
+  return el;
+}
 
 function commentsRender() {
-  commentsthread.innerHTML =
-    `<div id='commentsthreadinner'>
-                    ${comments.map(commentFmt).join('')}
-                </div>`;
+  const el = document.createElement('div');
+  comments.forEach(x => el.appendChild(commentFmt(x)));
+  commentsthread.replaceChildren(el);
+  el.id = 'commentsthreadinner'
 }
 
 /* API calls */
